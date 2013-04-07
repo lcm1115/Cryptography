@@ -93,7 +93,7 @@ int shanks(int a, int b, int p) {
   // Reset val
   val = b;
 
-  // Compute values of L2 until one is found in L!
+  // Compute values of L2 until one is found in L1
   int a1 = 1;
   for (int i = 0; i < m; ++i) {
     // If current value is found in L1, return the answer (mj + i)
@@ -216,4 +216,49 @@ int gf_order(vector<int> p1, int p) {
     ++order;
   }
   return order;
+}
+
+int gf_shanks(vector<int> a, vector<int> b, int p) {
+  int m = p;
+  vector<int> val(2);
+  val.at(0) = 0;
+  val.at(1) = 1;
+  vector<vector<int> > L1;
+  for (int i = 0; i < m; ++i) {
+    L1.push_back(val);
+    val = gf_mul(val, a, p); 
+  }
+  vector<int> inv = gf_exp(gf_inv(a, p), m, p);
+  vector<int> y = b;
+  for(int i = 0; i < m; ++i) {
+    for (int j = 0; j < m; ++j) {
+      if (L1[j] == y) {
+        printf("i: %d: %d %d\n", i, y.at(0), y.at(1));
+        printf("j: %d: %d %d\n", j, L1[j].at(0), L1[j].at(1));
+        return (i * m + j);
+        break;
+      }
+      y = gf_mul(y, inv, p);
+    }
+
+  }
+
+  return -1;
+}
+
+vector<int> gf_inv(vector<int> a, int p) {
+  vector<int> poly(2);
+  vector<int> result;
+  for (int i = 0; i < p; ++i) {
+    for (int j = 0; j < p; ++j) {
+      poly.at(0) = i;
+      poly.at(1) = j;
+      result = gf_mul(a, poly, p);
+      if (result.at(0) == 0 && result.at(1) == 1) {
+        return poly;
+      }
+    }
+  }
+
+  return a;
 }

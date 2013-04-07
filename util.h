@@ -117,3 +117,7 @@ std::vector<int> gf_exp(std::vector<int> p1, int e, int p);
 // Output:
 //   int - the order of p1 modulo x^2 + 1 in GF(p^2)
 int gf_order(std::vector<int> p1, int p);
+
+int gf_shanks(std::vector<int> a, std::vector<int> b, int p);
+
+std::vector<int> gf_inv(std::vector<int> a, int p);
