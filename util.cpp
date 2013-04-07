@@ -182,8 +182,16 @@ vector<int> powers(int a, int p) {
 // ################
 vector<int> gf_mul(vector<int> p1, vector<int> p2, int p) {
   vector<int> result(2);
-  result.at(0) = abs(p1.at(0) * p2.at(1) + p1.at(1) * p2.at(0)) % p;
-  result.at(1) = abs(p1.at(1) * p2.at(1) - p1.at(0) * p2.at(0)) % p;
+  int a = (p1.at(0) * p2.at(1) + p1.at(1) * p2.at(0)) % p;
+  int b = (p1.at(1) * p2.at(1) - p1.at(0) * p2.at(0)) % p;
+  while (a < 0) {
+    a += p;
+  }
+  while (b < 0) {
+    b += p;
+  }
+  result.at(0) = a;
+  result.at(1) = b;
   return result;
 }
 
@@ -202,6 +210,9 @@ int gf_order(vector<int> p1, int p) {
   vector<int> cur(p1);
   while ((cur.at(0) != 0 || cur.at(1) != 1) && order < p * p) {
     cur = gf_mul(cur, p1, p);
+    if (cur.at(0) == p1.at(0) && cur.at(1) == p1.at(1)) {
+      break;
+    }
     ++order;
   }
   return order;
