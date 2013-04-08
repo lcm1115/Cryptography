@@ -118,6 +118,22 @@ std::vector<int> gf_exp(std::vector<int> p1, int e, int p);
 //   int - the order of p1 modulo x^2 + 1 in GF(p^2)
 int gf_order(std::vector<int> p1, int p);
 
+
+// Computes the discrete logarithm of a given polynomial modulo x^2 + 1
+// in GF(p^2)
+// Input:
+//   vector<int> a - the polynomial being used as a base
+//   vector<int> b - the argument of the logarithm
+//   int p - the generating prime for the finite field
+// Output
+//   int - the power to which a is raised such that b is returned
 int gf_shanks(std::vector<int> a, std::vector<int> b, int p);
 
+// Computes the multiplicative modular inverse of a given polynomial modulo
+// x^2 + 1 in GF(p^2)
+// Input:
+//   vector<int> a - the polynomial whose inverse is being calculated
+//   int p - the generating prime for the finite field
+// Output:
+//   vector<int> - the multiplicative inverse of a
 std::vector<int> gf_inv(std::vector<int> a, int p);
