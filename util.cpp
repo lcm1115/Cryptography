@@ -233,14 +233,10 @@ int gf_shanks(vector<int> a, vector<int> b, int p) {
   for(int i = 0; i < m; ++i) {
     for (int j = 0; j < m; ++j) {
       if (L1[j] == y) {
-        printf("i: %d: %d %d\n", i, y.at(0), y.at(1));
-        printf("j: %d: %d %d\n", j, L1[j].at(0), L1[j].at(1));
         return (i * m + j);
-        break;
       }
-      y = gf_mul(y, inv, p);
     }
-
+    y = gf_mul(y, inv, p);
   }
 
   return -1;
