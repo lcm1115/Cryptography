@@ -2,7 +2,7 @@
 // Author:      Liam Morris
 // Description: Implements the functions prototyped in util.h.
 
-#include "util.h"
+#include "crypto.h"
 
 #include <cmath>
 #include <cstdlib>
