@@ -91,7 +91,6 @@ std::vector<int> powers(int a, int p);
 // ################
 // FIELD ARITHMETIC
 // ################
-
 // Multiplies two polynomials together modulo x^2 + 1 in GF(p^2)
 // Input:
 //   vector<int> p1 - the first polynomial (ax + b)
@@ -137,3 +136,97 @@ int gf_shanks(std::vector<int> a, std::vector<int> b, int p);
 // Output:
 //   vector<int> - the multiplicative inverse of a
 std::vector<int> gf_inv(std::vector<int> a, int p);
+
+// ###############
+// ELLIPTIC CURVES
+// ###############
+// Determines if a given value is a quadratic residue of a group.
+// Input:
+//   int y - the value being tested
+//   int p - the modulus of the group
+//   int (*exp)(int) - a function that represents the group's elliptic curve
+// Output:
+//   bool - whether or not the value is a quadratic residue
+bool is_residue(int y, int p, int (*exp)(int));
+
+// Computes the values for which there is a quadratic residue in a group.
+// Input:
+//   int p - the modulus of the group
+//   int (*exp)(int) - a function that represents the group's elliptic curve
+// Output:
+//   vector<int> - the list of residues in the given group
+std::vector<int> find_residues(int p, int (*exp)(int));
+
+// Computes point addition of two elliptic curve points.
+// Input:
+//   vector<int> P - the first point
+//   vector<int> Q - the second point
+//   int p - the modulus of the group
+//   int a - the value 'a' in the elliptic curve function x^2 + ax + b
+// Output:
+//   vector<int> - the resulting point of P + Q
+std::vector<int> ec_add(std::vector<int> P, std::vector<int> Q,
+                        int p, int a = 1);
+
+// Computes point multiplication of an elliptic curve point.
+// Input:
+//   vector<int> P - the point
+//   int m - the number that the point is being multiplied by
+//   int p - the modulus of the group
+//   int a - the value 'a' in the elliptic curve function x^2 + ax + b
+// Output:
+//   vector<int> - the resulting point of mP
+std::vector<int> ec_mul(std::vector<int> P, int m, int p, int a = 1);
+
+// Computes point multiplication of an elliptic curve point using the DoubleAdd
+// method.
+// Input:
+//   vector<int> P - the point
+//   vector<int> m - the NAF of the number that the point is being multiplied by
+//   int p - the modulus of the group
+//   int a - the value 'a' in the elliptic curve function x^2 + ax + b
+// Output:
+//   vector<int> - the resulting point of mP
+std::vector<int> ec_mul_dbl(std::vector<int> P, std::vector<int> m,
+                            int p, int a = 1);
+
+// Computes the order of a point in its group.
+// Input:
+//   vector<int> P - the point
+//   int p - the modulus of the group
+//   int a - the value 'a' in the elliptic curve function x^2 + ax + b
+// Output:
+//   int - the order of point P in its group
+int ec_order(std::vector<int> P, int p, int a = 1);
+
+// Computes the square root of a value in its group.
+// Input:
+//   int a - the value for which the square root is being computed.
+//   int p - the modulus of the group where p = 3 mod 4
+// Output:
+//   int - the square root of the value
+int ec_sqrt(int a, int p);
+
+// Computes all possible coordinates of an elliptic curve group.
+// Input:
+//   int (*exp)(int) - the function that represents the elliptic curve
+//   int p - the modulus of the group
+// Output:
+//   vector<vector<int> > - a list of points on the curve
+std::vector<std::vector<int> > coordinates(int (*exp)(int), int p);
+
+// Compresses an elliptic curve point.
+// Input:
+//   vector<int> P - the point being compressed
+// Output:
+//   vector<int> - the compressed form of P
+std::vector<int> ec_compress(std::vector<int> P);
+
+// Decompresses an elliptic curve point.
+// Input:
+//   vector<int> P - the point being decompressed
+//   int p - the modulus of the group
+//   int (*exp)(int) - the function that represents the elliptic curve
+// Output:
+//   vector<int> the decompressed form of P
+std::vector<int> ec_decompress(std::vector<int> P, int p, int (*exp)(int));
