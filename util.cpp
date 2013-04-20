@@ -283,43 +283,43 @@ vector<int> find_residues(int p, int (*exp)(int)) {
   return residues;
 }
 
-vector<int> ec_add(vector<int> P, vector<int> Q, int p, int a) {
+point ec_add(point P, point Q, int p, int a) {
   // If either point is 0, return the other point
-  if (P.at(0) == 0 && P.at(1) == 0) return Q;
-  if (Q.at(0) == 0 && Q.at(1) == 0) return P;
+  if (P.x == 0 && P.y == 0) return Q;
+  if (Q.x == 0 && Q.y == 0) return P;
 
-  vector<int> result(2);
-  result.at(0) = 0;
-  result.at(1) = 0;
+  point result;
+  result.x = 0;
+  result.y = 0;
 
   // If the points are inverses of each other, return 0
-  if (P.at(0) == Q.at(0) &&
-      (P.at(1) + Q.at(1) == p || (P.at(1) == 0 && Q.at(1) == 0))) return result;
+  if (P.x == Q.x &&
+      (P.y + Q.y == p || (P.y == 0 && Q.y == 0))) return result;
   int lambda;
   int t;
 
   // Compute lambda depending on P and Q equality.
-  if (P != Q) {
-    lambda = ((Q.at(1) - P.at(1)) * EEA(Q.at(0) - P.at(0), p)) % p;
+  if (P.x != Q.x || P.y != Q.y) {
+    lambda = ((Q.y - P.y) * EEA(Q.x - P.x, p)) % p;
   } else {
-    lambda = ((3 * P.at(0) * P.at(0) + a) * EEA(2 * P.at(1), p)) % p;
+    lambda = ((3 * P.x * P.x + a) * EEA(2 * P.y, p)) % p;
   }
 
   // Compute the x and y values of the resulting point
-  result.at(0) = (lambda * lambda - P.at(0) - Q.at(0)) % p;
-  result.at(1) = (lambda * (P.at(0) - result.at(0)) - P.at(1)) % p;
+  result.x = (lambda * lambda - P.x - Q.x) % p;
+  result.y = (lambda * (P.x - result.x) - P.y) % p;
 
   // Correct negative values
-  if (result.at(0) < 0) result.at(0) += p;
-  if (result.at(1) < 0) result.at(1) += p;
+  if (result.x < 0) result.x += p;
+  if (result.y < 0) result.y += p;
 
   return result;
 }
 
-vector<int> ec_mul(vector<int> P, int m, int p, int a) {
-  vector<int> result(2);
-  result.at(0) = 0;
-  result.at(1) = 0;
+point ec_mul(point P, int m, int p, int a) {
+  point result;
+  result.x = 0;
+  result.y = 0;
 
   // Add point m times
   for (int i = 0; i < m; ++i) {
@@ -329,12 +329,10 @@ vector<int> ec_mul(vector<int> P, int m, int p, int a) {
   return result;
 }
 
-vector<int> ec_mul_dbl(vector<int> P, vector<int> m, int p, int a) {
-  vector<int> Q(2);
-  vector<int> P_neg(P);
-  P_neg.at(1) = p - P_neg.at(1);
-  Q.at(0) = 0;
-  Q.at(1) = 0;
+point ec_mul_dbl(point P, vector<int> m, int p, int a) {
+  point Q;
+  point P_neg(P);
+  P_neg.y = p - P_neg.y;
   for (int i = 0; i < m.size(); ++i) {
     // Double the point
     Q = ec_add(Q, Q, p);
@@ -352,15 +350,15 @@ vector<int> ec_mul_dbl(vector<int> P, vector<int> m, int p, int a) {
   return Q;
 }
 
-int ec_order(vector<int> P, int p, int a) {
+int ec_order(point P, int p, int a) {
   // Initialize order to 1 and point to 0
   int order = 1;
-  vector<int> result(2);
-  result.at(0) = P.at(0);
-  result.at(1) = P.at(1);
+  point result;
+  result.x = P.x;
+  result.y = P.y;
 
   // Add the point to the current point until 0 is reached
-  while (result.at(0) != 0 || result.at(1) != 0) {
+  while (result.x != 0 || result.y != 0) {
     result = ec_add(P, result, p, a);
     ++order;
   }
@@ -373,9 +371,9 @@ int ec_sqrt(int a, int p) {
   return mod(a, (p + 1) / 4, p);
 }
 
-vector<vector<int> > coordinates(int (*exp)(int), int p) {
-  vector<vector<int> > coordinates;
-  vector<int> curr(2);
+vector<point> coordinates(int (*exp)(int), int p) {
+  vector<point> coordinates;
+  point curr;
 
   // Add 0 to coordinates
   coordinates.push_back(curr);
@@ -389,16 +387,16 @@ vector<vector<int> > coordinates(int (*exp)(int), int p) {
       y1 = ec_sqrt(y1, p);
       int y2 = p - y1;
       if (y2 < 0) y2 += p;
-      curr.at(0) = i;
-      curr.at(1) = min(y1, y2);
+      curr.x = i;
+      curr.y = min(y1, y2);
       coordinates.push_back(curr);
-      curr.at(1) = max(y1, y2);
+      curr.y = max(y1, y2);
       coordinates.push_back(curr);
     }
     // If the resulting value is 0, add the one corresponding point to the list
     else if (m == 0) {
-      curr.at(0) = i;
-      curr.at(1) = 0;
+      curr.x = i;
+      curr.y = 0;
       coordinates.push_back(curr);
     }
   }
@@ -406,23 +404,23 @@ vector<vector<int> > coordinates(int (*exp)(int), int p) {
   return coordinates;
 }
 
-vector<int> ec_compress(vector<int> P) {
-  vector<int> result(P);
-  result.at(1) %= 2;
+point ec_compress(point P) {
+  point result(P);
+  result.y %= 2;
   return result;
 }
 
-vector<int> ec_decompress(vector<int> P, int p, int (*exp)(int)) {
-  int x = P.at(0);
+point ec_decompress(point P, int p, int (*exp)(int)) {
+  int x = P.x;
   int z = (*exp)(x);
   if (is_residue(z, p, exp)) {
     int y = ec_sqrt(z, p);
-    if (y % 2 == P.at(1)) {
-      P.at(1) = y;
+    if (y % 2 == P.y) {
+      P.y = y;
       return P;
     }
     else {
-      P.at(1) = p - y;
+      P.y = p - y;
       return P;
     }
   }
