@@ -1,4 +1,4 @@
-// File:        util.cpp
+// File:        crypto.cpp
 // Author:      Liam Morris
 // Description: Implements the functions prototyped in crypto.h.
 

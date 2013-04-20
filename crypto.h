@@ -1,4 +1,4 @@
-// File:        util.h
+// File:        crypto.h
 // Author:      Liam Morris
 // Description: Contains various supporting functions to be used in other
 //              cryptography programs.
