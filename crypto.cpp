@@ -1,6 +1,6 @@
 // File:        util.cpp
 // Author:      Liam Morris
-// Description: Implements the functions prototyped in util.h.
+// Description: Implements the functions prototyped in crypto.h.
 
 #include "crypto.h"
 
