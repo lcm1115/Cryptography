@@ -4,6 +4,7 @@
 
 #include "crypto.h"
 
+#include <algorithm>
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
@@ -329,20 +330,58 @@ point ec_mul(point P, int m, int p, int a) {
   return result;
 }
 
-point ec_mul_dbl(point P, vector<int> m, int p, int a) {
+vector<int> to_naf(int n) {
+  // Convert integer to standard binary form
+  vector<int> digits;
+  while (n > 0) {
+    digits.push_back(n & 1);
+    n = n >> 1;
+  }
+
+  // Iterate across digits and convert as needed
+  for (int i = 0; i < digits.size() - 1; ++i) {
+    int j = i + 1;
+
+    // Identify block of 1 digits
+    if (digits.at(i) == 1 && digits.at(j) == 1) {
+      digits.at(i) = -1;
+
+      // Convert all 1's to 0's until block is in NAF
+      while (digits.at(j) == 1) {
+        digits.at(j) = 0;
+        ++j;
+
+        // If another digit is needed, add it
+        if (j == digits.size()) {
+          digits.push_back(0);
+        }
+      }
+
+      // Convert last digit in the block to 1
+      digits.at(j) = 1;
+    }
+  }
+  return digits;
+}
+
+point ec_mul_dbl(point P, int m, int p, int a) {
   point Q;
   point P_neg(P);
   P_neg.y = p - P_neg.y;
-  for (int i = 0; i < m.size(); ++i) {
+
+  // Get NAF of multiplier
+  vector<int> NAF = to_naf(m);
+
+  for (int i = NAF.size() - 1; i >= 0; --i) {
     // Double the point
     Q = ec_add(Q, Q, p);
 
     // If the current index is a 1, add the point
-    if (m.at(i) == 1) {
+    if (NAF.at(i) == 1) {
       Q = ec_add(Q, P, p);
     }
     // If the current index is a -1, subtract the point
-    else if (m.at(i) == -1) {
+    else if (NAF.at(i) == -1) {
       Q = ec_add(Q, P_neg, p);
     }
   }

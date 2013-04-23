@@ -185,6 +185,13 @@ point ec_add(point P, point Q,
 //   point - the resulting point of mP
 point ec_mul(point P, int m, int p, int a = 1);
 
+// Converts an integer to it's non-adjacent form.
+// Input:
+//   int n - the number being coverted
+// Output:
+//   vector<int> - the NAF of the integer
+std::vector<int> to_naf(int n);
+
 // Computes point multiplication of an elliptic curve point using the DoubleAdd
 // method.
 // Input:
@@ -194,7 +201,7 @@ point ec_mul(point P, int m, int p, int a = 1);
 //   int a - the value 'a' in the elliptic curve function x^2 + ax + b
 // Output:
 //   point - the resulting point of mP
-point ec_mul_dbl(point P, std::vector<int> m, int p, int a = 1);
+point ec_mul_dbl(point P, int m, int p, int a = 1);
 
 // Computes the order of a point in its group.
 // Input:
