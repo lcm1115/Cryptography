@@ -172,8 +172,7 @@ std::vector<int> find_residues(int p, int (*exp)(int));
 //   int a - the value 'a' in the elliptic curve function x^2 + ax + b
 // Output:
 //   point - the resulting point of P + Q
-point ec_add(point P, point Q,
-                        int p, int a = 1);
+point ec_add(point P, point Q, int p, int a = 1);
 
 // Computes point multiplication of an elliptic curve point.
 // Input:
