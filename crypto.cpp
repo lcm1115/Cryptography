@@ -134,6 +134,8 @@ int EEA(int a, int m) {
 int mod(int a, int b, int p) {
   int mod = 1;
   int mul = a;
+
+  // Iterate across all bits in the number.
   while (b > 0) {
     if (b & 1) {
       mod *= mul;
